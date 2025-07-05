@@ -1,4 +1,3 @@
-
 import { connectDB } from '@/lib/mongodb'; 
 import Budget from '@/models/Budget';     
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -12,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const budgets = await Budget.find({ month });
       return res.status(200).json(budgets);
-    } catch (err) {
+    } catch {
       return res.status(500).json({ error: 'Error fetching budgets' });
     }
   }
@@ -24,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const newBudget = new Budget({ category, amount, month });
       await newBudget.save();
       return res.status(201).json(newBudget);
-    } catch (err) {
+    } catch {
       return res.status(500).json({ error: 'Error saving budget' });
     }
   }

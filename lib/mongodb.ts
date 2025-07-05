@@ -6,18 +6,17 @@ if (!MONGODB_URI) {
   throw new Error('⚠️ Please define the MONGODB_URI environment variable inside .env.local');
 }
 
-// Define cache structure
 interface MongooseCache {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
 }
 
-// Extend global type to support hot reload in dev
 declare global {
   var mongoose: MongooseCache | undefined;
 }
 
-let cached: MongooseCache = global.mongoose || { conn: null, promise: null };
+// ✅ Changed let → const
+const cached: MongooseCache = global.mongoose || { conn: null, promise: null };
 
 if (!global.mongoose) {
   global.mongoose = cached;
