@@ -1,20 +1,30 @@
 'use client';
+
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
-export default function ExpenseChart({ transactions }: { transactions: any[] }) {
-  const monthlyTotals: { [key: string]: number } = {};
+type Transaction = {
+  date: string;
+  amount: number;
+};
 
-  transactions.forEach(tx => {
+type Props = {
+  transactions: Transaction[];
+};
+
+export default function ExpenseChart({ transactions }: Props) {
+  const monthlyTotals: Record<string, number> = {};
+
+  transactions.forEach((tx) => {
     const month = new Date(tx.date).toLocaleString('default', {
       month: 'short',
-      year: 'numeric'
+      year: 'numeric',
     });
     monthlyTotals[month] = (monthlyTotals[month] || 0) + tx.amount;
   });
 
-  const data = Object.keys(monthlyTotals).map(month => ({
+  const data = Object.keys(monthlyTotals).map((month) => ({
     month,
-    total: monthlyTotals[month]
+    total: monthlyTotals[month],
   }));
 
   return (
@@ -34,7 +44,7 @@ export default function ExpenseChart({ transactions }: { transactions: any[] }) 
           />
           <Bar
             dataKey="total"
-            fill="#1d4ed8" 
+            fill="#1d4ed8"
             barSize={40}
             radius={[4, 4, 0, 0]}
           />

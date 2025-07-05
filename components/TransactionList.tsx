@@ -1,13 +1,20 @@
 'use client';
+
 import React from 'react';
 
-export default function TransactionList({
-  transactions,
-  onDelete,
-}: {
-  transactions: any[];
+type Transaction = {
+  _id: string;
+  amount: number;
+  description: string;
+  date: string;
+};
+
+type Props = {
+  transactions: Transaction[];
   onDelete: (id: string) => void;
-}) {
+};
+
+export default function TransactionList({ transactions, onDelete }: Props) {
   return (
     <div className="mt-4">
       <h2 className="text-lg font-bold text-black">Transactions</h2>

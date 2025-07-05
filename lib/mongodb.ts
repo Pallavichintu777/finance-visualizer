@@ -1,4 +1,3 @@
-
 import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -7,9 +6,24 @@ if (!MONGODB_URI) {
   throw new Error('⚠️ Please define the MONGODB_URI environment variable inside .env.local');
 }
 
-let cached = (global as any).mongoose || { conn: null, promise: null };
+// Define cache structure
+interface MongooseCache {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
+}
 
-export const connectDB = async () => {
+// Extend global type to support hot reload in dev
+declare global {
+  var mongoose: MongooseCache | undefined;
+}
+
+let cached: MongooseCache = global.mongoose || { conn: null, promise: null };
+
+if (!global.mongoose) {
+  global.mongoose = cached;
+}
+
+export const connectDB = async (): Promise<typeof mongoose> => {
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
@@ -20,7 +34,5 @@ export const connectDB = async () => {
   }
 
   cached.conn = await cached.promise;
-  (global as any).mongoose = cached;
-
   return cached.conn;
 };

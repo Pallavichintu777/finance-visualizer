@@ -1,14 +1,39 @@
 'use client';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
-export default function BudgetVsActualChart({ budgets, transactions }: any) {
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from 'recharts';
+
+type Budget = {
+  category: string;
+  amount: number;
+  month: string;
+};
+
+type Transaction = {
+  category: string;
+  amount: number;
+};
+
+type Props = {
+  budgets: Budget[];
+  transactions: Transaction[];
+};
+
+export default function BudgetVsActualChart({ budgets, transactions }: Props) {
   const budgetMap: Record<string, number> = {};
-  budgets.forEach((b: any) => {
+  budgets.forEach((b) => {
     budgetMap[b.category] = b.amount;
   });
 
   const actualMap: Record<string, number> = {};
-  transactions.forEach((t: any) => {
+  transactions.forEach((t) => {
     if (!actualMap[t.category]) actualMap[t.category] = 0;
     actualMap[t.category] += Number(t.amount);
   });
